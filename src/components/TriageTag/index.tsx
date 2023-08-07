@@ -1,73 +1,71 @@
 import { type FunctionComponent } from 'preact'
-import { cx } from '../../utils'
-import Icon from '../Icon'
+import { allPatients, useAppDispatch, useAppSelector } from '../../store'
+import { type Code, checkCapillaryRefill, checkMentalStatus, checkRespiratoryRate, checkWalking, clearAirway, controlBleeding, setCode } from '../../store/patients'
 import TagRow from './TagRow'
 import TagCell from './TagCell'
+import TagTool from './TagTool'
+import TagCodeButton from './TagCodeButton'
 
-const TagTool: FunctionComponent<{ n: string }> = ({ n }) => {
-  const cls = cx(
-    'flex col-span-2 bg-blue-600 transition duration-500',
-    'hover:bg-blue-800 active:bg-blue-800'
-  )
-
-  return (
-    <button className={cls}>
-      <Icon n={n} className='text-3xl md:text-5xl block m-auto' />
-    </button>
-  )
-}
-
-const TagCodeButton: FunctionComponent<{ value: number, className?: string, checked: boolean }> = ({ value, className, checked }) => {
-  const cls = cx(
-    'flex col-span-1 group appearance-none transition duration-500 cursor-pointer',
-    className
-  )
-
-  return (
-    <input type="radio" name="triage-code" value={value} checked={checked} className={cls}>
-      <Icon n='check_circle' className='hidden group-checked:block text-4xl md:text-6xl block m-auto' />
-    </input>
-  )
-}
-
-const TagCodeSelector: FunctionComponent<{ value?: number }> = ({ value }) => (
+const TagCodeSelector: FunctionComponent<{ value?: number, onChange: (code: Code) => void }> = ({ value, onChange }) => (
   <div className="grid grid-cols-4 h-20 text-white cursor-pointer">
-    <TagCodeButton value={4} checked={value === 4} className="bg-gray-900" />
-    <TagCodeButton value={3} checked={value === 3} className="bg-red-600" />
-    <TagCodeButton value={2} checked={value === 2} className="bg-amber-400" />
-    <TagCodeButton value={1} checked={value === 1} className="bg-green-500" />
+    <TagCodeButton onClick={onChange} value={4} checked={value === 4} className="bg-gray-900" />
+    <TagCodeButton onClick={onChange} value={3} checked={value === 3} className="bg-red-600" />
+    <TagCodeButton onClick={onChange} value={2} checked={value === 2} className="bg-amber-400" />
+    <TagCodeButton onClick={onChange} value={1} checked={value === 1} className="bg-green-500" />
   </div>
 )
 
 const TriageTag: FunctionComponent = () => {
+  const patient = useAppSelector(allPatients)[0]
+  const dispatch = useAppDispatch()
+
+  if (patient === undefined) throw new Error('Patient not found')
+
   return (
     <div className="m-auto w-full lg:w-5/12 h-min bg-white shadow-lg">
-      <h1 className="text-xl font-black p-4 border-b-4 border-black">Triage Tag <span className="text-gray-600">#1</span></h1>
       <TagRow border>
-        <TagCell title='Name' span={9}>Mario Rossi</TagCell>
-        <TagCell title='Age' span={3}>78yrs</TagCell>
+        <TagCell title='Triage tag' span={9}>#{patient.id.toString().padStart(4, '0')}</TagCell>
+        <TagCell title='Age' span={3}>{patient.age} yrs</TagCell>
       </TagRow>
       <TagRow>
-        <TagCell title='Hemorrage' span={6}><span className="text-red-600">Bleeding</span></TagCell>
-        <TagCell title='Mobility' span={6}>Walking</TagCell>
+        <TagCell title='Hemorrhage' span={6}>
+          {patient.bleeding === undefined && 'Not bleeding'}
+          {patient.bleeding === true && <span className="text-red-600">Bleeding</span>}
+          {patient.bleeding === false && <span className="text-green-600">Controlled</span>}
+        </TagCell>
+        <TagCell title='Mobility' span={6}>
+          {patient.walking === undefined && '--'}
+          {patient.walking === true && 'Walking'}
+          {patient.walking === false && 'Not walking'}
+        </TagCell>
       </TagRow>
       <TagRow>
-        <TagCell title='Airway' span={4}>✓</TagCell>
-        <TagCell title='Respiratory rate' span={4}>28</TagCell>
-        <TagCell title='Capillary refill' span={4}>1.81s</TagCell>
+        <TagCell title='Airway' span={4}>
+          {patient.airwayCleared === undefined ? '--' : 'In place'}
+        </TagCell>
+        <TagCell title='Respiratory rate' span={4}>
+          {patient.respiratoryRate === undefined ? '--' : patient.respiratoryRate}
+        </TagCell>
+        <TagCell title='Capillary refill' span={4}>
+          {patient.capillaryRefill === undefined ? '--' : `${patient.capillaryRefill.toFixed(2)}s`}
+        </TagCell>
       </TagRow>
       <TagRow>
-        <TagCell title='Mental status'>Obeys</TagCell>
+        <TagCell title='Mental status'>
+          {patient.obeys === undefined && '--'}
+          {patient.obeys === true && 'Obeys'}
+          {patient.obeys === false && 'Doesn\'t obey'}
+        </TagCell>
       </TagRow>
-      <TagRow className='text-white border-b-0 divide-x-0'>
-        <TagTool n='directions_walk' />
-        <TagTool n='healing' />
-        <TagTool n='respiratory_rate' />
-        <TagTool n='ent' />
-        <TagTool n='ecg' />
-        <TagTool n='cognition' />
-      </TagRow>
-      <TagCodeSelector />
+      <div className='flex flex-1 h-20 text-white'>
+        <TagTool n='directions_walk' onClick={() => dispatch(checkWalking(patient.id))} />
+        <TagTool n='healing' onClick={() => dispatch(controlBleeding(patient.id))} />
+        <TagTool n='respiratory_rate' onClick={() => dispatch(checkRespiratoryRate(patient.id))}/>
+        <TagTool n='ent' onClick={() => dispatch(clearAirway(patient.id))} />
+        <TagTool n='ecg' onClick={() => dispatch(checkCapillaryRefill(patient.id))} />
+        <TagTool n='cognition' onClick={() => dispatch(checkMentalStatus(patient.id))} />
+      </div>
+      <TagCodeSelector value={patient.assignedCode} onChange={(code: Code) => dispatch(setCode([patient.id, code]))} />
     </div >
   )
 }
