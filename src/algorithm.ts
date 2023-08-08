@@ -33,12 +33,11 @@ abstract class TriageAlgorithm {
 }
 
 class Start extends TriageAlgorithm {
-  newPatient (code: Code): Patient {
-    const id = randomInt(0, 500)
+  newPatient (code: Code, id?: number): Patient {
     const age = randomInt(0, 80)
     const airwayObstruction = code === Code.IMMEDIATE ? randomBool(0.3) : false
 
-    return { id, age, code, airwayObstruction }
+    return { id: id ?? randomInt(0, 500), age, code, airwayObstruction }
   }
 
   controlBleeding (): Partial<Patient> {

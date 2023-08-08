@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
-import patients, { patientsAdapter } from './patients'
 import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import patients, { patientsAdapter } from './patients'
+import ui from './ui'
 
 export const store = configureStore({
   reducer: {
-    patients
+    patients,
+    ui
   }
 })
 

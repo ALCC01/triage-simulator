@@ -1,11 +1,12 @@
 import { type FunctionComponent } from 'preact'
-import { allPatients, useAppDispatch, useAppSelector } from '../../store'
+import { patientById, useAppDispatch, useAppSelector } from '../../store'
 import { checkCapillaryRefill, checkMentalStatus, checkRespiratoryRate, checkWalking, clearAirway, controlBleeding, setCode } from '../../store/patients'
 import { type Code } from '../../algorithm'
 import TagRow from './TagRow'
 import TagCell from './TagCell'
 import TagTool from './TagTool'
 import TagCodeButton from './TagCodeButton'
+import Card from '../Card'
 
 const TagCodeSelector: FunctionComponent<{ value?: number, onChange: (code: Code) => void }> = ({ value, onChange }) => (
   <div className="grid grid-cols-4 h-20 text-white cursor-pointer">
@@ -17,13 +18,15 @@ const TagCodeSelector: FunctionComponent<{ value?: number, onChange: (code: Code
 )
 
 const TriageTag: FunctionComponent = () => {
-  const patient = useAppSelector(allPatients)[0]
+  const currentPatientId = useAppSelector((state) => state.ui.currentPatient)
+  const patient = useAppSelector((state) => patientById(state, currentPatientId ?? 0))
   const dispatch = useAppDispatch()
 
+  if (currentPatientId === undefined) return <></>
   if (patient === undefined) throw new Error('Patient not found')
 
   return (
-    <div className="m-auto w-full lg:w-5/12 h-min bg-white shadow-lg">
+    <Card className='h-min'>
       <TagRow border>
         <TagCell title='Triage tag' span={9}>#{patient.id.toString().padStart(4, '0')}</TagCell>
         <TagCell title='Age' span={3}>{patient.age} yrs</TagCell>
@@ -67,7 +70,7 @@ const TriageTag: FunctionComponent = () => {
         <TagTool n='cognition' onClick={() => dispatch(checkMentalStatus(patient.id))} />
       </div>
       <TagCodeSelector value={patient.assignedCode} onChange={(code: Code) => dispatch(setCode([patient.id, code]))} />
-    </div >
+    </Card >
   )
 }
 
