@@ -1,87 +1,45 @@
 import { type PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit'
-import { randomBool, randomFloat, randomInt } from '../utils'
-
-export enum Code {
-  EXPECTANT = 4,
-  IMMEDIATE = 3,
-  DELAYED = 2,
-  MINOR = 1
-}
-
-export class Patient {
-  id: number
-  age: number
-  code: Code
-  assignedCode?: Code
-  bleeding?: boolean
-  walking?: boolean
-  breathing?: boolean
-  airwayObstruction: boolean
-  airwayCleared?: boolean
-  respiratoryRate?: number
-  capillaryRefill?: number
-  obeys?: boolean
-
-  constructor () {
-    this.id = randomInt(0, 500)
-    this.age = randomInt(0, 80)
-    this.code = randomInt(0, 5)
-    this.airwayObstruction = this.code === Code.IMMEDIATE ? randomBool(0.3) : false
-  }
-}
+import { START, type Code, type Patient } from '../algorithm'
 
 export const patientsAdapter = createEntityAdapter<Patient>()
 
 const initialState = patientsAdapter.getInitialState()
 
-export const counterSlice = createSlice({
+export const patientSlice = createSlice({
   name: 'patients',
   initialState,
   reducers: {
     addPatient: patientsAdapter.addMany,
     removePatient: patientsAdapter.removeOne,
     controlBleeding: (state, { payload: id }: PayloadAction<number>) => {
-      patientsAdapter.updateOne(state, { id, changes: { bleeding: false } })
+      patientsAdapter.updateOne(state, { id, changes: START.controlBleeding() })
     },
     clearAirway: (state, { payload: id }: PayloadAction<number>) => {
-      patientsAdapter.updateOne(state, { id, changes: { airwayCleared: true } })
+      patientsAdapter.updateOne(state, { id, changes: START.clearAirway() })
     },
     checkRespiratoryRate: (state, { payload: id }: PayloadAction<number>) => {
       const patient = state.entities[id]
-      if (patient === undefined) return
+      if (patient === undefined) throw new Error('Patient not found')
 
-      const code = patient.code
-      const obstructed = patient.airwayObstruction && patient.airwayCleared !== true
-
-      let respiratoryRate = 0
-      if (code < Code.IMMEDIATE) respiratoryRate = randomInt(5, 30)
-      if (code === Code.IMMEDIATE) respiratoryRate = obstructed ? 0 : randomInt(30, 50)
-
-      patientsAdapter.updateOne(state, { id, changes: { respiratoryRate } })
+      patientsAdapter.updateOne(state, { id, changes: START.checkRespiratoryRate(patient) })
     },
     checkCapillaryRefill: (state, { payload: id }: PayloadAction<number>) => {
       const patient = state.entities[id]
-      if (patient === undefined) return
+      if (patient === undefined) throw new Error('Patient not found')
 
-      const code = patient.code
-      const capillaryRefill = code >= Code.IMMEDIATE ? randomFloat(2, 10) : randomFloat(0, 2)
-      patientsAdapter.updateOne(state, { id, changes: { capillaryRefill } })
+      patientsAdapter.updateOne(state, { id, changes: START.checkCapillaryRefill(patient) })
     },
     checkMentalStatus: (state, { payload: id }: PayloadAction<number>) => {
       const patient = state.entities[id]
-      if (patient === undefined) return
+      if (patient === undefined) throw new Error('Patient not found')
 
-      const code = patient.code
-      const obeys = code < Code.IMMEDIATE
-      patientsAdapter.updateOne(state, { id, changes: { obeys } })
+      patientsAdapter.updateOne(state, { id, changes: START.checkMentalStatus(patient) })
     },
     checkWalking: (state, { payload: id }: PayloadAction<number>) => {
       const patient = state.entities[id]
-      if (patient === undefined) return
+      if (patient === undefined) throw new Error('Patient not found')
 
-      const code = patient.code
-      const walking = code <= Code.MINOR
-      patientsAdapter.updateOne(state, { id, changes: { walking } })
+      patientsAdapter.updateOne(state, { id, changes: START.checkWalking(patient) })
     },
     setCode: (state, { payload: [id, code] }: PayloadAction<[number, Code]>) => {
       patientsAdapter.updateOne(state, { id, changes: { assignedCode: code } })
@@ -93,6 +51,6 @@ export const {
   addPatient, removePatient, controlBleeding, clearAirway,
   checkRespiratoryRate, checkCapillaryRefill, checkMentalStatus, checkWalking,
   setCode
-} = counterSlice.actions
+} = patientSlice.actions
 
-export default counterSlice.reducer
+export default patientSlice.reducer

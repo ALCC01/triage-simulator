@@ -1,5 +1,5 @@
 import { type FunctionComponent } from 'preact'
-import { type Code } from '../../store/patients'
+import { Code } from '../../algorithm'
 import { cx } from '../../utils'
 import Icon from '../Icon'
 

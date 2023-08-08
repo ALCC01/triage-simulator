@@ -1,6 +1,7 @@
 import { type FunctionComponent } from 'preact'
 import { allPatients, useAppDispatch, useAppSelector } from '../../store'
-import { type Code, checkCapillaryRefill, checkMentalStatus, checkRespiratoryRate, checkWalking, clearAirway, controlBleeding, setCode } from '../../store/patients'
+import { checkCapillaryRefill, checkMentalStatus, checkRespiratoryRate, checkWalking, clearAirway, controlBleeding, setCode } from '../../store/patients'
+import { type Code } from '../../algorithm'
 import TagRow from './TagRow'
 import TagCell from './TagCell'
 import TagTool from './TagTool'
