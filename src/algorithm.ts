@@ -36,8 +36,9 @@ class Start extends TriageAlgorithm {
   newPatient (code: Code, id?: number): Patient {
     const age = randomInt(0, 80)
     const airwayObstruction = code === Code.IMMEDIATE ? randomBool(0.3) : false
+    const bleeding = randomBool(0.3) ? true : undefined
 
-    return { id: id ?? randomInt(0, 500), age, code, airwayObstruction }
+    return { id: id ?? randomInt(0, 500), age, code, airwayObstruction, bleeding }
   }
 
   controlBleeding (): Partial<Patient> {
@@ -53,13 +54,13 @@ class Start extends TriageAlgorithm {
 
     let respiratoryRate = 0
     if (code < Code.IMMEDIATE) respiratoryRate = randomInt(5, 30)
-    if (code === Code.IMMEDIATE) respiratoryRate = obstructed ? 0 : randomInt(30, 50)
+    if (code === Code.IMMEDIATE) respiratoryRate = obstructed ? 0 : randomInt(10, 45)
 
     return { respiratoryRate }
   }
 
   checkCapillaryRefill ({ code }: Patient): Partial<Patient> {
-    const capillaryRefill = code >= Code.IMMEDIATE ? randomFloat(2, 10) : randomFloat(0, 2)
+    const capillaryRefill = code >= Code.IMMEDIATE ? randomFloat(0, 6) : randomFloat(0, 2)
 
     return { capillaryRefill }
   }

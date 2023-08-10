@@ -7,7 +7,7 @@ import { randomInt } from './utils'
 import TriageTag from './components/TriageTag'
 import PatientList from './components/PatientList'
 
-store.dispatch(addPatient(new Array(80).fill(0).map(() => START.newPatient(randomInt(1, 5)))))
+store.dispatch(addPatient(new Array(80).fill(0).map((_, i) => START.newPatient(randomInt(1, 5), i + 1))))
 
 export const App: FunctionComponent = () => {
   return (
