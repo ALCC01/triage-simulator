@@ -12,7 +12,7 @@ const TagTool: FunctionComponent<TagToolProps> = ({ n, onClick }) => {
 
   return (
     <button className={cls} onClick={onClick}>
-      <Icon n={n} className='text-3xl md:text-5xl block m-auto' />
+      <Icon n={n} className='text-4xl sm:text-5xl block m-auto' />
     </button>
   )
 }

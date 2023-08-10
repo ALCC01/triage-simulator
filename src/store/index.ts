@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { LS_PATIENTS, persistMiddleware } from './persistMiddleware'
-import patients, { patientsAdapter } from './patients'
+import patients from './patients'
 import ui from './ui'
 
 const patientsState = JSON.parse(localStorage.getItem(LS_PATIENTS) ?? 'null') ?? undefined
@@ -23,7 +23,4 @@ export type AppDispatch = typeof store.dispatch
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
-export const {
-  selectById: patientById,
-  selectAll: allPatients
-} = patientsAdapter.getSelectors<RootState>((state) => state.patients)
+export * from './selectors'

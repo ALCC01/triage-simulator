@@ -24,3 +24,8 @@ const colors = {
 } as const
 
 export const codeToColor = (code: Code): readonly [string, string] => colors[code]
+
+export const pct = (n: number): string => {
+  if (isNaN(n)) n = 0
+  return `${(n * 100).toFixed(2)}%`
+}
