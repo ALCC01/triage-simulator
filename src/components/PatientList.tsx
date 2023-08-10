@@ -3,6 +3,8 @@ import { codeToColor, cx } from '../utils'
 import Card from './Card'
 import { allPatients, useAppDispatch, useAppSelector } from '../store'
 import { setCurrentPatient } from '../store/ui'
+import { useGame } from '../hooks'
+import Icon from './Icon'
 
 interface PatientDotProps { active?: boolean, value: number, code: number, onSelect: (id: number) => void }
 
@@ -16,6 +18,16 @@ const PatientDot: FunctionComponent<PatientDotProps> = ({ active, value, code, o
 
   return (
     <input type="radio" name="current-patient" value={value} checked={active} className={cls} onClick={() => { onSelect(value) }} />
+  )
+}
+
+const SkeletonPatientList: FunctionComponent = () => {
+  const { newGame } = useGame()
+
+  return (
+    <button className="flex items-center justify-center w-6/12 my-1 mx-auto p-4 text-2xl font-black text-white bg-blue-700 hover:bg-blue-800 transition duration-500" onClick={newGame}>
+      <Icon n="add" className="text-4xl" /> New disaster
+    </button>
   )
 }
 
@@ -34,6 +46,7 @@ const PatientList: FunctionComponent = () => {
         <p className="text-2xl md:text-3xl font-bold">Patients</p>
       </div>
       <div className="p-2 max-h-36 overflow-scroll">
+        {patients.length === 0 && <SkeletonPatientList />}
         {patients.map(({ assignedCode, id }) => (
           <PatientDot key={id} value={id} code={assignedCode ?? 0} onSelect={onSelect} active={currentPatientId === id} />
         ))}

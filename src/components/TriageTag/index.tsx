@@ -23,7 +23,7 @@ const TriageTag: FunctionComponent = () => {
   const dispatch = useAppDispatch()
 
   if (currentPatientId === undefined) return <></>
-  if (patient === undefined) throw new Error('Patient not found')
+  if (patient === undefined) return <></>
 
   return (
     <Card className='h-min'>

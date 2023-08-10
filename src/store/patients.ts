@@ -11,6 +11,7 @@ export const patientSlice = createSlice({
   reducers: {
     addPatient: patientsAdapter.addMany,
     removePatient: patientsAdapter.removeOne,
+    clearPatients: patientsAdapter.removeAll,
     controlBleeding: (state, { payload: id }: PayloadAction<number>) => {
       patientsAdapter.updateOne(state, { id, changes: START.controlBleeding() })
     },
@@ -47,8 +48,9 @@ export const patientSlice = createSlice({
   }
 })
 
+// TODO When crearing an action remember to add it to the matcher in persistMiddleware.ts too
 export const {
-  addPatient, removePatient, controlBleeding, clearAirway,
+  addPatient, removePatient, clearPatients, controlBleeding, clearAirway,
   checkRespiratoryRate, checkCapillaryRefill, checkMentalStatus, checkWalking,
   setCode
 } = patientSlice.actions
