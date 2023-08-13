@@ -22,7 +22,7 @@ const Toolbar: FunctionComponent = () => {
       <ToolbarIcon n="restart_alt" title="New game" onClick={onReload} />
       <ToolbarIcon n="show_chart" title="Statistics" onClick={openStats}/>
       <ToolbarIcon n="info" title="About" />
-      <span className="text-lg font-black">Triage Simulator</span>
+      <span className="text-lg font-black">⛑ Triage Simulator</span>
     </div>
   )
 }
