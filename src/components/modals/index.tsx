@@ -15,14 +15,14 @@ const Modal: FunctionComponent<PropsWithChildren<{ name: string, title: string }
       <div className="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity cursor-pointer" onClick={close} />
       <div className="fixed inset-0 z-10 overflow-y-auto pointer-events-none">
         <div className="flex min-h-full items-center justify-center">
-          <Card className="relative w-full max-w-3xl m-4 overflow-hidden bg-white shadow-xl transition-all pointer-events-auto">
+          <Card className="relative w-full sm:w-9/12 lg:w-6/12 m-4 overflow-hidden bg-white shadow-xl transition-all pointer-events-auto">
             <div className="flex p-2 lg:px-3 justify-between items-center border-b-4 border-black">
               <h2 className="text-2xl font-bold" id={`${name}-modal-title`}>{title}</h2>
               <button className="cursor-pointer" aria-label="Close modal" onClick={() => { close() }}>
                 <Icon n="close" className="text-4xl leading-4 align-middle" />
               </button>
             </div>
-            <div className="p-2 lg:px-3 overflow-scroll">
+            <div className="p-4 lg:px-6 overflow-scroll">
               {children}
             </div>
           </Card>

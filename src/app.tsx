@@ -5,6 +5,8 @@ import TriageTag from './components/TriageTag'
 import PatientList from './components/PatientList'
 import Toolbar from './components/Toolbar'
 import StatsModal from './components/modals/StatsModal'
+import Footer from './components/Footer'
+import InfoModal from './components/modals/InfoModal'
 
 export const App: FunctionComponent = () => {
   return (
@@ -14,9 +16,11 @@ export const App: FunctionComponent = () => {
           <Toolbar />
           <PatientList />
           <TriageTag />
+          <Footer />
         </div>
       </div>
       <StatsModal />
+      <InfoModal />
     </Provider>
   )
 }

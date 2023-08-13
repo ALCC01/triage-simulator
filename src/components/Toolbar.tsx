@@ -2,6 +2,7 @@ import { type FunctionComponent } from 'preact'
 import Icon from './Icon'
 import { useGame, useModal } from '../hooks'
 import { STATS_MODAL_ID } from './modals/StatsModal'
+import { INFO_MODAL_ID } from './modals/InfoModal'
 
 interface ToolbarIconProps { n: string, title: string, onClick?: () => void }
 
@@ -14,6 +15,7 @@ const ToolbarIcon: FunctionComponent<ToolbarIconProps> = ({ n, title, onClick })
 const Toolbar: FunctionComponent = () => {
   const { newGame } = useGame()
   const { open: openStats } = useModal(STATS_MODAL_ID)
+  const { open: openInfo } = useModal(INFO_MODAL_ID)
 
   const onReload = (): void => { newGame() }
 
@@ -21,7 +23,7 @@ const Toolbar: FunctionComponent = () => {
     <div className="flex flex-row-reverse items-center gap-2 mb-4">
       <ToolbarIcon n="restart_alt" title="New game" onClick={onReload} />
       <ToolbarIcon n="show_chart" title="Statistics" onClick={openStats}/>
-      <ToolbarIcon n="info" title="About" />
+      <ToolbarIcon n="info" title="About" onClick={openInfo}/>
       <span className="text-lg font-black">⛑ Triage Simulator</span>
     </div>
   )
