@@ -43,7 +43,7 @@ const PatientList: FunctionComponent = () => {
   return (
     <Card className="mb-6">
       <div className="p-2 lg:px-3 border-b-4 border-black">
-        <p className="text-2xl md:text-3xl font-bold">Patients</p>
+        <p className="text-2xl font-bold">Patients</p>
       </div>
       <div className="p-2 max-h-36 overflow-scroll">
         {patients.length === 0 && <SkeletonPatientList />}

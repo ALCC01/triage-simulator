@@ -17,7 +17,7 @@ const Modal: FunctionComponent<PropsWithChildren<{ name: string, title: string }
         <div className="flex min-h-full items-center justify-center">
           <Card className="relative w-full max-w-3xl m-4 overflow-hidden bg-white shadow-xl transition-all pointer-events-auto">
             <div className="flex p-2 lg:px-3 justify-between items-center border-b-4 border-black">
-              <h1 className="text-2xl md:text-3xl font-bold" id={`${name}-modal-title`}>{title}</h1>
+              <h1 className="text-2xl font-bold" id={`${name}-modal-title`}>{title}</h1>
               <a href="#" onClick={() => { close() }} aria-label="Close modal"><Icon n="close" className="text-3xl" /></a>
             </div>
             <div className="p-2 lg:px-3 overflow-scroll">
