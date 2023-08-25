@@ -3,9 +3,10 @@
 Triage Simulator is a simple web app that allows healthcare and emergency
 workers to learn and become familiar with triage protocols for mass casualty
 incidents. The project aims to provide users with a readily available tool to
-test and refresh their triage skills over their careers.
+test and refresh their triage skills. The app currently supports the START
+triage algorithm (Benson et al, 1996).
 
-The app currently supports the START triage algorithm.
+You can see a demo deployment [here](https://triage.pages.dev).
 
 ## Installation
 
