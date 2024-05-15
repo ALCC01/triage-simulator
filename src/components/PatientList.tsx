@@ -17,24 +17,17 @@ interface PatientDotProps {
 }
 
 const PatientDot: FunctionComponent<PatientDotProps> = ({ active, value, code, assignedCode, onSelect, reveal }) => {
-  let cls = cx(
-    'inline-block h-6 w-6 mx-1 appearance-none cursor-pointer',
-    active === true && 'border-4 bg-white',
-    assignedCode === 0 && (active === true ? 'border-gray-400' : 'bg-gray-400')
+  const cls = cx(
+    'inline-block m-0.5 appearance-none cursor-pointer',
+    codeToColor(assignedCode)[0]
   )
 
+  const wrong = assignedCode !== 0 && code !== assignedCode
+  let icon = 'circle'
   if (reveal) {
-    cls = cx(
-      cls,
-      assignedCode !== 0 && code !== assignedCode ? 'rounded-none' : 'rounded-full',
-      assignedCode !== 0 && (active === true ? codeToColor(code)[1] : codeToColor(code)[0])
-    )
-  } else {
-    cls = cx(
-      cls,
-      'rounded-full',
-      assignedCode !== 0 && (active === true ? codeToColor(assignedCode)[1] : codeToColor(assignedCode)[0])
-    )
+    if (assignedCode === 0) icon = 'help'
+    else if (wrong) icon = 'cancel'
+    else if (!wrong) icon = 'check_circle'
   }
 
   return (
@@ -43,7 +36,9 @@ const PatientDot: FunctionComponent<PatientDotProps> = ({ active, value, code, a
       value={value}
       className={cls}
       onClick={() => { onSelect(value) }}
-    />
+    >
+      <Icon n={icon} className="text-4xl leading-none align-middle" fill={!(active ?? false)} />
+    </a>
   )
 }
 
@@ -86,7 +81,7 @@ const PatientList: FunctionComponent = () => {
           />
         </button>
       </CardHeader>
-      <div className="p-2 max-h-36 overflow-scroll">
+      <div className="p-2 max-h-36 overflow-scroll flex justify-items-center justify-center flex-wrap">
         {patients.length === 0 && <SkeletonPatientList />}
         {patients.map(({ assignedCode, code, id }) => (
           <PatientDot

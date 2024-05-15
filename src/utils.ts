@@ -17,10 +17,11 @@ export const cx = (...args: unknown[]): string => args
   .trim()
 
 const colors = {
-  1: ['bg-green-600', 'border-green-600'],
-  2: ['bg-amber-400', 'border-amber-400'],
-  3: ['bg-red-600', 'border-red-600'],
-  4: ['bg-gray-800', 'border-gray-800']
+  0: ['text-gray-400', 'border-gray-400'],
+  1: ['text-green-600', 'border-green-600'],
+  2: ['text-amber-400', 'border-amber-400'],
+  3: ['text-red-600', 'border-red-600'],
+  4: ['text-gray-800', 'border-gray-800']
 } as const
 
 export const codeToColor = (code: Code): readonly [string, string] => colors[code]

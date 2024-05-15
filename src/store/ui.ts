@@ -14,7 +14,7 @@ export const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    setCurrentPatient: (state, { payload: id }: PayloadAction<number>) => {
+    setCurrentPatient: (state, { payload: id }: PayloadAction<number | undefined>) => {
       state.currentPatient = id
     },
     openModal: (state, { payload: id }: PayloadAction<string>) => {

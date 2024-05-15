@@ -11,7 +11,7 @@ export const useGame = (): { newGame: () => void } => {
   const newGame = useCallback((): void => {
     dispatch(clearPatients())
     dispatch(addPatient(new Array(80).fill(0).map((_, i) => START.newPatient(randomInt(1, 5), i + 1))))
-    dispatch(setCurrentPatient(1))
+    dispatch(setCurrentPatient(undefined))
   }, [dispatch])
 
   return { newGame }
