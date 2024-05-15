@@ -77,6 +77,7 @@ const PatientList: FunctionComponent = () => {
         <h2 className="text-2xl font-bold">Patients</h2>
         <button
           className="cursor-pointer"
+          title={`${revealCodes ? 'Hide' : 'Reveal'} correct triage codes`}
           aria-label={`${revealCodes ? 'Hide' : 'Reveal'} correct triage codes`}
           onClick={onToggleRevealCodes}
         >

@@ -62,12 +62,12 @@ const TriageTag: FunctionComponent = () => {
         </TagCell>
       </TagRow>
       <div className='flex flex-1 h-20 text-white'>
-        <TagTool n='directions_walk' onClick={() => dispatch(checkWalking(patient.id))} />
-        <TagTool n='healing' onClick={() => dispatch(controlBleeding(patient.id))} />
-        <TagTool n='respiratory_rate' onClick={() => dispatch(checkRespiratoryRate(patient.id))}/>
-        <TagTool n='ent' onClick={() => dispatch(clearAirway(patient.id))} />
-        <TagTool n='ecg' onClick={() => dispatch(checkCapillaryRefill(patient.id))} />
-        <TagTool n='cognition' onClick={() => dispatch(checkMentalStatus(patient.id))} />
+        <TagTool title='Check mobility' id='check-mobility' n='directions_walk' onClick={() => dispatch(checkWalking(patient.id))} />
+        <TagTool title='Control bleeding' id='control-bleed' n='healing' onClick={() => dispatch(controlBleeding(patient.id))} />
+        <TagTool title='Respiratory rate' id='check-rr' n='respiratory_rate' onClick={() => dispatch(checkRespiratoryRate(patient.id))} />
+        <TagTool title='Place airway' id='place-airway' n='ent' onClick={() => dispatch(clearAirway(patient.id))} />
+        <TagTool title='Capillary refill' id='check-capillary-refill' n='ecg' onClick={() => dispatch(checkCapillaryRefill(patient.id))} />
+        <TagTool title='Mental status' id='check-mental-statumobilitys' n='cognition' onClick={() => dispatch(checkMentalStatus(patient.id))} />
       </div>
       <TagCodeSelector value={patient.assignedCode} onChange={(code: Code) => dispatch(setCode([patient.id, code]))} />
     </Card >
