@@ -7,6 +7,7 @@ import Toolbar from './components/Toolbar'
 import StatsModal from './components/modals/StatsModal'
 import Footer from './components/Footer'
 import InfoModal from './components/modals/InfoModal'
+import FeedbackCard from './components/FeedbackCard'
 
 export const App: FunctionComponent = () => {
   return (
@@ -16,6 +17,7 @@ export const App: FunctionComponent = () => {
           <Toolbar />
           <PatientList />
           <TriageTag />
+          <FeedbackCard />
           <Footer />
         </div>
       </div>

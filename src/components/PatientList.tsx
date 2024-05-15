@@ -1,8 +1,8 @@
 import { type FunctionComponent } from 'preact'
 import { codeToColor, cx } from '../utils'
-import Card from './Card'
+import Card, { CardHeader } from './Card'
 import { allPatients, useAppDispatch, useAppSelector } from '../store'
-import { setCurrentPatient, toggleRevealCodes } from '../store/ui'
+import { setCurrentPatient, toggleFeedback } from '../store/ui'
 import { useGame } from '../hooks'
 import Icon from './Icon'
 import { type Code } from '../algorithm'
@@ -60,33 +60,32 @@ const SkeletonPatientList: FunctionComponent = () => {
 const PatientList: FunctionComponent = () => {
   const currentPatientId = useAppSelector((state) => state.ui.currentPatient)
   const patients = useAppSelector(allPatients)
-  const revealCodes = useAppSelector((state) => state.ui.revealCodes)
+  const revealCodes = useAppSelector((state) => state.ui.revealFeedback)
   const dispatch = useAppDispatch()
 
   const onSelect = (id: number): void => {
     dispatch(setCurrentPatient(id))
   }
 
-  const onToggleRevealCodes = (): void => {
-    dispatch(toggleRevealCodes())
+  const onToggleFeedback = (): void => {
+    dispatch(toggleFeedback())
   }
 
   return (
     <Card className="mb-6">
-      <div className="flex p-2 lg:px-3 items-center justify-between border-b-4 border-black">
-        <h2 className="text-2xl font-bold">Patients</h2>
+      <CardHeader title="Patients">
         <button
           className="cursor-pointer"
           title={`${revealCodes ? 'Hide' : 'Reveal'} correct triage codes`}
           aria-label={`${revealCodes ? 'Hide' : 'Reveal'} correct triage codes`}
-          onClick={onToggleRevealCodes}
+          onClick={onToggleFeedback}
         >
           <Icon
             n={revealCodes ? 'visibility_off' : 'visibility'}
             className="text-4xl leading-4 align-middle"
           />
         </button>
-      </div>
+      </CardHeader>
       <div className="p-2 max-h-36 overflow-scroll">
         {patients.length === 0 && <SkeletonPatientList />}
         {patients.map(({ assignedCode, code, id }) => (
@@ -100,7 +99,7 @@ const PatientList: FunctionComponent = () => {
           />
         ))}
       </div>
-    </Card>
+    </Card >
   )
 }
 

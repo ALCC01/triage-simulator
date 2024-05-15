@@ -34,9 +34,9 @@ const InfoModal: FunctionComponent = () => (
         </li>
         <li>
           You can use <Icon n="visibility" className='text-xl/6 align-bottom' /> in
-          the patient list to show the correct code for each patient you have
-          triaged. Patients with the correct code will remain represented by
-          a dot, while those with the wrong code will be displayed as squared.
+          the patient list to show which patients have been correctly
+          triaged and to show individual feedback on each patient under their
+          triage tag
         </li>
         <li>
           Use <Icon n="show_chart" className='text-xl/6 align-bottom' /> to

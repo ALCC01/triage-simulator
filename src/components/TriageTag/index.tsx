@@ -33,9 +33,9 @@ const TriageTag: FunctionComponent = () => {
       </TagRow>
       <TagRow>
         <TagCell title='Hemorrhage' span={6}>
-          {patient.bleeding === undefined && 'Not bleeding'}
-          {patient.bleeding === true && <span className="text-red-600">Bleeding</span>}
-          {patient.bleeding === false && <span className="text-green-600">Controlled</span>}
+          {patient.bleedingControlled === true && <span className="text-green-600">Controlled</span>}
+          {patient.bleeding && patient.bleedingControlled !== true && <span className="text-red-600">Bleeding</span>}
+          {!patient.bleeding && patient.bleedingControlled !== true && 'Not bleeding'}
         </TagCell>
         <TagCell title='Mobility' span={6}>
           {patient.walking === undefined && '--'}

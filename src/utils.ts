@@ -25,6 +25,15 @@ const colors = {
 
 export const codeToColor = (code: Code): readonly [string, string] => colors[code]
 
+const emojis = {
+  1: '🟢',
+  2: '🟡',
+  3: '🔴',
+  4: '⚫️'
+}
+
+export const codeToEmoji = (code: Code): string => emojis[code]
+
 export const pct = (n: number): string => {
   if (isNaN(n)) n = 0
   return `${(n * 100).toFixed(2)}%`

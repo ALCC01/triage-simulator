@@ -3,11 +3,11 @@ import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
 interface UIState {
   currentPatient?: number
   currentModal?: string
-  revealCodes: boolean
+  revealFeedback: boolean
 }
 
 const initialState: UIState = {
-  revealCodes: false
+  revealFeedback: false
 }
 
 export const uiSlice = createSlice({
@@ -23,12 +23,12 @@ export const uiSlice = createSlice({
     closeModal: (state) => {
       state.currentModal = undefined
     },
-    toggleRevealCodes: (state) => {
-      state.revealCodes = !state.revealCodes
+    toggleFeedback: (state) => {
+      state.revealFeedback = !state.revealFeedback
     }
   }
 })
 
-export const { setCurrentPatient, openModal, closeModal, toggleRevealCodes } = uiSlice.actions
+export const { setCurrentPatient, openModal, closeModal, toggleFeedback } = uiSlice.actions
 
 export default uiSlice.reducer
