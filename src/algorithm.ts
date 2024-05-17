@@ -63,7 +63,10 @@ class Start extends TriageAlgorithm {
   }
 
   checkCapillaryRefill ({ code }: Patient): Partial<Patient> {
-    const capillaryRefill = code >= Code.IMMEDIATE ? randomFloat(0, 4) : randomFloat(0, 2)
+    let capillaryRefill = 0
+    if (code === Code.EXPECTANT) capillaryRefill = randomFloat(2, 10)
+    else if (code === Code.IMMEDIATE) capillaryRefill = randomFloat(0, 4)
+    else capillaryRefill = randomFloat(0, 2)
 
     return { capillaryRefill }
   }
