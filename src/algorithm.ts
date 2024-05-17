@@ -94,14 +94,14 @@ class Start extends TriageAlgorithm {
 
     if (p.airwayObstruction || p.code === Code.EXPECTANT) {
       if (p.airwayCleared === true) feedback.push('✅ Airway was cleared')
-      else feedback.push('❌ Airway wasn\'t cleared')
+      else if (p.respiratoryRate !== undefined) feedback.push('❌ Airway wasn\'t cleared') // Wait until respiratory rate is checked
     } else if (p.airwayCleared === true) feedback.push('❌ Airway wasn\'t needed')
 
     if (p.code === Code.MINOR && (p.respiratoryRate !== undefined || p.obeys !== undefined || p.capillaryRefill !== undefined)) {
       feedback.push('❌ You didn\'t need to proceed beyond checking mobility')
-    } else if (p.respiratoryRate !== undefined && (p.obeys !== undefined || p.capillaryRefill !== undefined)) {
+    } else if (p.respiratoryRate !== undefined && (p.respiratoryRate === 0 || p.respiratoryRate > 30 || p.airwayObstruction) && (p.obeys !== undefined || p.capillaryRefill !== undefined)) {
       feedback.push('❌ You didn\'t need to proceed beyond checking the respiratory rate')
-    } else if (p.capillaryRefill !== undefined && p.obeys !== undefined) {
+    } else if (p.capillaryRefill !== undefined && p.capillaryRefill >= 2 && p.obeys !== undefined) {
       feedback.push('❌ You didn\'t need to proceed beyond checking the capillary refill')
     }
 
