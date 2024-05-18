@@ -29,7 +29,7 @@ const TriageTag: FunctionComponent = () => {
     <Card className='h-min'>
       <TagRow border>
         <TagCell title='Triage tag' span={9}>#{patient.id.toString().padStart(4, '0')}</TagCell>
-        <TagCell title='Age' span={3}>{patient.age} yrs</TagCell>
+        <TagCell title='Age' span={3}>{patient.adult ? 'Adult' : 'Child'}</TagCell>
       </TagRow>
       <TagRow>
         <TagCell title='Hemorrhage' span={6}>

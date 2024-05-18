@@ -9,7 +9,7 @@ export enum Code {
 
 export interface Patient {
   id: number
-  age: number
+  adult: boolean
   code: Code
   assignedCode?: Code
   bleeding: boolean
@@ -36,12 +36,12 @@ abstract class TriageAlgorithm {
 
 class Start extends TriageAlgorithm {
   newPatient (code: Code, id?: number): Patient {
-    const age = randomInt(0, 80)
+    const adult = randomBool(0.6)
     const airwayObstruction = code === Code.IMMEDIATE ? randomBool(0.3) : false
-    const bleeding = !!randomBool(0.3)
+    const bleeding = randomBool(0.3)
     const bleedingControlled = false
 
-    return { id: id ?? randomInt(0, 500), age, code, airwayObstruction, bleeding, bleedingControlled }
+    return { id: id ?? randomInt(0, 500), adult, code, airwayObstruction, bleeding, bleedingControlled }
   }
 
   controlBleeding (): Partial<Patient> {
