@@ -14,12 +14,12 @@ export const selectTriagedPatients = createSelector(
 
 export const selectUndertriagedPatients = createSelector(
   [allPatients],
-  patients => patients.filter(({ code, assignedCode }) => code > assignedCode!) // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  patients => patients.filter(({ code, assignedCode }) => code > assignedCode) // eslint-disable-line @typescript-eslint/no-non-null-assertion
 )
 
 export const selectOvertriagedPatients = createSelector(
   [allPatients],
-  patients => patients.filter(({ code, assignedCode }) => code < assignedCode!) // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  patients => patients.filter(({ code, assignedCode }) => code < assignedCode) // eslint-disable-line @typescript-eslint/no-non-null-assertion
 )
 
 export const selectBleedingNotControlled = createSelector(

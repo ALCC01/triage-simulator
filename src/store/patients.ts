@@ -1,7 +1,8 @@
 import { type PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit'
-import { START, type Code, type Patient } from '../algorithm'
+import { START, type StartPatient } from '../algorithms/START'
+import { type Code } from '../algorithms'
 
-export const patientsAdapter = createEntityAdapter<Patient>()
+export const patientsAdapter = createEntityAdapter<StartPatient>()
 
 const initialState = patientsAdapter.getInitialState()
 
@@ -12,35 +13,11 @@ export const patientSlice = createSlice({
     addPatient: patientsAdapter.addMany,
     removePatient: patientsAdapter.removeOne,
     clearPatients: patientsAdapter.removeAll,
-    controlBleeding: (state, { payload: id }: PayloadAction<number>) => {
-      patientsAdapter.updateOne(state, { id, changes: START.controlBleeding() })
-    },
-    clearAirway: (state, { payload: id }: PayloadAction<number>) => {
-      patientsAdapter.updateOne(state, { id, changes: START.clearAirway() })
-    },
-    checkRespiratoryRate: (state, { payload: id }: PayloadAction<number>) => {
+    executeAction: (state, { payload: [id, action] }: PayloadAction<[number, any]>) => {
       const patient = state.entities[id]
       if (patient === undefined) throw new Error('Patient not found')
 
-      patientsAdapter.updateOne(state, { id, changes: START.checkRespiratoryRate(patient) })
-    },
-    checkCapillaryRefill: (state, { payload: id }: PayloadAction<number>) => {
-      const patient = state.entities[id]
-      if (patient === undefined) throw new Error('Patient not found')
-
-      patientsAdapter.updateOne(state, { id, changes: START.checkCapillaryRefill(patient) })
-    },
-    checkMentalStatus: (state, { payload: id }: PayloadAction<number>) => {
-      const patient = state.entities[id]
-      if (patient === undefined) throw new Error('Patient not found')
-
-      patientsAdapter.updateOne(state, { id, changes: START.checkMentalStatus(patient) })
-    },
-    checkWalking: (state, { payload: id }: PayloadAction<number>) => {
-      const patient = state.entities[id]
-      if (patient === undefined) throw new Error('Patient not found')
-
-      patientsAdapter.updateOne(state, { id, changes: START.checkWalking(patient) })
+      patientsAdapter.updateOne(state, { id, changes: START.action(action, patient) })
     },
     setCode: (state, { payload: [id, code] }: PayloadAction<[number, Code]>) => {
       patientsAdapter.updateOne(state, { id, changes: { assignedCode: code } })
@@ -50,9 +27,7 @@ export const patientSlice = createSlice({
 
 // TODO When crearing an action remember to add it to the matcher in persistMiddleware.ts too
 export const {
-  addPatient, removePatient, clearPatients, controlBleeding, clearAirway,
-  checkRespiratoryRate, checkCapillaryRefill, checkMentalStatus, checkWalking,
-  setCode
+  addPatient, removePatient, clearPatients, executeAction, setCode
 } = patientSlice.actions
 
 export default patientSlice.reducer

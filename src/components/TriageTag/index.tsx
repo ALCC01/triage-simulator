@@ -1,12 +1,13 @@
 import { type FunctionComponent } from 'preact'
 import { patientById, useAppDispatch, useAppSelector } from '../../store'
-import { checkCapillaryRefill, checkMentalStatus, checkRespiratoryRate, checkWalking, clearAirway, controlBleeding, setCode } from '../../store/patients'
-import { type Code } from '../../algorithm'
+import { executeAction, setCode } from '../../store/patients'
+import { type Code } from '../../algorithms'
 import TagRow from './TagRow'
 import TagCell from './TagCell'
 import TagTool from './TagTool'
 import TagCodeButton from './TagCodeButton'
 import Card from '../Card'
+import { StartAction } from '../../algorithms/START'
 
 const TagCodeSelector: FunctionComponent<{ value?: number, onChange: (code: Code) => void }> = ({ value, onChange }) => (
   <div className="grid grid-cols-4 h-20 text-white cursor-pointer">
@@ -62,12 +63,12 @@ const TriageTag: FunctionComponent = () => {
         </TagCell>
       </TagRow>
       <div className='flex flex-1 h-20 text-white'>
-        <TagTool title='Check mobility' id='check-mobility' n='directions_walk' onClick={() => dispatch(checkWalking(patient.id))} />
-        <TagTool title='Control bleeding' id='control-bleed' n='healing' onClick={() => dispatch(controlBleeding(patient.id))} />
-        <TagTool title='Respiratory rate' id='check-rr' n='respiratory_rate' onClick={() => dispatch(checkRespiratoryRate(patient.id))} />
-        <TagTool title='Place airway' id='place-airway' n='ent' onClick={() => dispatch(clearAirway(patient.id))} />
-        <TagTool title='Capillary refill' id='check-capillary-refill' n='ecg' onClick={() => dispatch(checkCapillaryRefill(patient.id))} />
-        <TagTool title='Mental status' id='check-mental-statumobilitys' n='cognition' onClick={() => dispatch(checkMentalStatus(patient.id))} />
+        <TagTool title='Check mobility' id='check-mobility' n='directions_walk' onClick={() => dispatch(executeAction([patient.id, StartAction.CHECK_WALKING]))} />
+        <TagTool title='Control bleeding' id='control-bleed' n='healing' onClick={() => dispatch(executeAction([patient.id, StartAction.CONTROL_BLEEDING]))} />
+        <TagTool title='Respiratory rate' id='check-rr' n='respiratory_rate' onClick={() => dispatch(executeAction([patient.id, StartAction.CHECK_RESPIRATORY_RATE]))} />
+        <TagTool title='Place airway' id='place-airway' n='ent' onClick={() => dispatch(executeAction([patient.id, StartAction.CLEAR_AIRWAY]))} />
+        <TagTool title='Capillary refill' id='check-capillary-refill' n='ecg' onClick={() => dispatch(executeAction([patient.id, StartAction.CHECK_CAPILLARY_REFILL]))} />
+        <TagTool title='Mental status' id='check-mental-status' n='cognition' onClick={() => dispatch(executeAction([patient.id, StartAction.CHECK_MENTAL_STATUS]))} />
       </div>
       <TagCodeSelector value={patient.assignedCode} onChange={(code: Code) => dispatch(setCode([patient.id, code]))} />
     </Card >

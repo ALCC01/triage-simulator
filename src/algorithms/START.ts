@@ -1,13 +1,7 @@
-import { randomInt, randomBool, randomFloat, codeToEmoji } from './utils'
+import { Code, TriageAlgorithm } from '.'
+import { randomInt, randomBool, randomFloat, codeToEmoji } from '../utils'
 
-export enum Code {
-  EXPECTANT = 4,
-  IMMEDIATE = 3,
-  DELAYED = 2,
-  MINOR = 1
-}
-
-export interface Patient {
+export interface StartPatient {
   id: number
   adult: boolean
   code: Code
@@ -23,19 +17,17 @@ export interface Patient {
   obeys?: boolean
 }
 
-abstract class TriageAlgorithm {
-  abstract newPatient (code: Code): Patient
-  abstract controlBleeding (): Partial<Patient>
-  abstract clearAirway (): Partial<Patient>
-  abstract checkRespiratoryRate (p: Patient): Partial<Patient>
-  abstract checkCapillaryRefill (p: Patient): Partial<Patient>
-  abstract checkMentalStatus (p: Patient): Partial<Patient>
-  abstract checkWalking (p: Patient): Partial<Patient>
-  abstract getFeedback (p: Patient): string[]
+export enum StartAction {
+  CONTROL_BLEEDING,
+  CLEAR_AIRWAY,
+  CHECK_RESPIRATORY_RATE,
+  CHECK_CAPILLARY_REFILL,
+  CHECK_MENTAL_STATUS,
+  CHECK_WALKING
 }
 
-class Start extends TriageAlgorithm {
-  newPatient (code: Code, id?: number): Patient {
+class Start extends TriageAlgorithm<StartPatient, StartAction> {
+  newPatient (code: Code, id?: number): StartPatient {
     const adult = randomBool(0.6)
     const airwayObstruction = code === Code.IMMEDIATE ? randomBool(0.3) : false
     const bleeding = randomBool(0.3)
@@ -44,15 +36,32 @@ class Start extends TriageAlgorithm {
     return { id: id ?? randomInt(0, 500), adult, code, airwayObstruction, bleeding, bleedingControlled }
   }
 
-  controlBleeding (): Partial<Patient> {
+  action (action: StartAction, p: StartPatient): Partial<StartPatient> {
+    switch (action) {
+      case StartAction.CONTROL_BLEEDING:
+        return this.controlBleeding()
+      case StartAction.CLEAR_AIRWAY:
+        return this.clearAirway()
+      case StartAction.CHECK_RESPIRATORY_RATE:
+        return this.checkRespiratoryRate(p)
+      case StartAction.CHECK_CAPILLARY_REFILL:
+        return this.checkCapillaryRefill(p)
+      case StartAction.CHECK_MENTAL_STATUS:
+        return this.checkMentalStatus(p)
+      case StartAction.CHECK_WALKING:
+        return this.checkWalking(p)
+    }
+  }
+
+  private controlBleeding (): Partial<StartPatient> {
     return { bleedingControlled: true }
   }
 
-  clearAirway (): Partial<Patient> {
+  private clearAirway (): Partial<StartPatient> {
     return { airwayCleared: true }
   }
 
-  checkRespiratoryRate ({ code, airwayObstruction, airwayCleared }: Patient): Partial<Patient> {
+  private checkRespiratoryRate ({ code, airwayObstruction, airwayCleared }: StartPatient): Partial<StartPatient> {
     const obstructed = airwayObstruction && airwayCleared !== true
 
     let respiratoryRate = 0 // Default value for expectant patients
@@ -62,7 +71,7 @@ class Start extends TriageAlgorithm {
     return { respiratoryRate }
   }
 
-  checkCapillaryRefill ({ code }: Patient): Partial<Patient> {
+  private checkCapillaryRefill ({ code }: StartPatient): Partial<StartPatient> {
     let capillaryRefill = 0
     if (code === Code.EXPECTANT) capillaryRefill = randomFloat(2, 10)
     else if (code === Code.IMMEDIATE) capillaryRefill = randomFloat(0, 4)
@@ -71,18 +80,18 @@ class Start extends TriageAlgorithm {
     return { capillaryRefill }
   }
 
-  checkMentalStatus ({ code }: Patient): Partial<Patient> {
+  private checkMentalStatus ({ code }: StartPatient): Partial<StartPatient> {
     const obeys = code < Code.IMMEDIATE
 
     return { obeys }
   }
 
-  checkWalking ({ code }: Patient): Partial<Patient> {
+  private checkWalking ({ code }: StartPatient): Partial<StartPatient> {
     const walking = code <= Code.MINOR
     return { walking }
   }
 
-  getFeedback (p: Patient): string[] {
+  getFeedback (p: StartPatient): string[] {
     const feedback = []
 
     if (p.assignedCode === undefined) feedback.push('❓ You did not assign a code to this patient')

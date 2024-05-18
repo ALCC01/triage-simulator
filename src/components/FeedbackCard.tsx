@@ -1,7 +1,7 @@
 import { type FunctionComponent } from 'preact'
 import Card, { CardHeader } from './Card'
 import { patientById, useAppDispatch, useAppSelector } from '../store'
-import { START } from '../algorithm'
+import { START } from '../algorithms/START'
 import { toggleFeedback } from '../store/ui'
 import Icon from './Icon'
 

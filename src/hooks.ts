@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'preact/hooks'
-import { START } from './algorithm'
+import { START } from './algorithms/START'
 import { useAppDispatch, useAppSelector } from './store'
 import { addPatient, clearPatients } from './store/patients'
 import { closeModal, openModal, setCurrentPatient } from './store/ui'
