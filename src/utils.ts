@@ -49,3 +49,6 @@ export const localeToFlag = (cc: string): string => {
     .map(ch => String.fromCodePoint(ch.charCodeAt(0) + 0x1F1A5))
     .join('')
 }
+
+export const pick = (keys: string[], object: Record<string, any>): Record<string, any> =>
+  keys.reduce((acc, key) => ({ ...acc, [key]: object[key] }), {})

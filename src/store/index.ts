@@ -1,14 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import { LS_PATIENTS, persistMiddleware } from './persistMiddleware'
+import { LS_PATIENTS, LS_UI, persistMiddleware } from './persistMiddleware'
 import patients from './patients'
 import ui from './ui'
 
 const patientsState = JSON.parse(localStorage.getItem(LS_PATIENTS) ?? 'null') ?? undefined
+const uiState = JSON.parse(localStorage.getItem(LS_UI) ?? 'null') ?? undefined
 
 export const store = configureStore({
   preloadedState: {
-    patients: patientsState
+    patients: patientsState,
+    ui: uiState
   },
   reducer: {
     patients,
