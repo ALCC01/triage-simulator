@@ -1,5 +1,6 @@
 import { render } from 'preact'
 import { App } from './app.tsx'
+import './i18n'
 import '@fontsource/inter/latin-400.css'
 import '@fontsource/inter/latin-700.css'
 import '@material-symbols/font-400/outlined.css'

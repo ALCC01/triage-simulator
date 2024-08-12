@@ -6,6 +6,7 @@ import { setCurrentPatient, toggleFeedback } from '../store/ui'
 import { useGame } from '../hooks'
 import Icon from './Icon'
 import { type Code } from '../algorithm'
+import { useTranslation } from 'react-i18next'
 
 interface PatientDotProps {
   active?: boolean
@@ -43,16 +44,18 @@ const PatientDot: FunctionComponent<PatientDotProps> = ({ active, value, code, a
 }
 
 const SkeletonPatientList: FunctionComponent = () => {
+  const { t } = useTranslation()
   const { newGame } = useGame()
 
   return (
     <button className="flex items-center justify-center md:w-6/12 my-1 mx-auto p-4 text-2xl font-black text-white bg-blue-700 hover:bg-blue-800 transition duration-500" onClick={newGame}>
-      <Icon n="add" className="text-4xl" /> New disaster
+      <Icon n="add" className="text-4xl" /> {t('New disaster')}
     </button>
   )
 }
 
 const PatientList: FunctionComponent = () => {
+  const { t } = useTranslation()
   const currentPatientId = useAppSelector((state) => state.ui.currentPatient)
   const patients = useAppSelector(allPatients)
   const revealCodes = useAppSelector((state) => state.ui.revealFeedback)
@@ -68,11 +71,11 @@ const PatientList: FunctionComponent = () => {
 
   return (
     <Card className="mb-6">
-      <CardHeader title="Patients">
+      <CardHeader title={t('Patients')}>
         <button
           className="cursor-pointer"
-          title={`${revealCodes ? 'Hide' : 'Reveal'} correct triage codes`}
-          aria-label={`${revealCodes ? 'Hide' : 'Reveal'} correct triage codes`}
+          title={revealCodes ? t('Hide correct triage codes') : t('Show correct triage codes')}
+          aria-label={revealCodes ? t('Hide correct triage codes') : t('Show correct triage codes')}
           onClick={onToggleFeedback}
         >
           <Icon

@@ -3,8 +3,10 @@ import { type PropsWithChildren, createPortal } from 'preact/compat'
 import { useHotkey, useModal } from '../../hooks'
 import Card from '../Card'
 import Icon from '../Icon'
+import { useTranslation } from 'react-i18next'
 
 const Modal: FunctionComponent<PropsWithChildren<{ name: string, title: string }>> = ({ name, children, title }) => {
+  const { t } = useTranslation()
   const { isOpen, close } = useModal(name)
   useHotkey('Escape', close)
 
@@ -18,7 +20,7 @@ const Modal: FunctionComponent<PropsWithChildren<{ name: string, title: string }
           <Card className="relative w-full sm:w-9/12 lg:w-6/12 m-4 overflow-hidden bg-white shadow-xl transition-all pointer-events-auto">
             <div className="flex p-2 lg:px-3 justify-between items-center border-b-4 border-black">
               <h2 className="text-2xl font-bold" id={`${name}-modal-title`}>{title}</h2>
-              <button className="cursor-pointer" aria-label="Close modal" onClick={() => { close() }}>
+              <button className="cursor-pointer" aria-label={t('Close modal')} onClick={() => { close() }}>
                 <Icon n="close" className="text-4xl leading-4 align-middle" />
               </button>
             </div>
