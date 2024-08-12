@@ -8,8 +8,14 @@ import StatsModal from './components/modals/StatsModal'
 import Footer from './components/Footer'
 import InfoModal from './components/modals/InfoModal'
 import FeedbackCard from './components/FeedbackCard'
+import { useEffect } from 'preact/hooks'
+import i18n from './i18n'
 
 export const App: FunctionComponent = () => {
+  useEffect(() => {
+    void i18n.changeLanguage(store.getState().ui.locale)
+  })
+
   return (
     <Provider store={store}>
       <div className="flex h-screen p-4">
