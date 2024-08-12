@@ -39,3 +39,13 @@ export const pct = (n: number): string => {
   if (isNaN(n)) n = 0
   return `${(n * 100).toFixed(2)}%`
 }
+
+export const localeToFlag = (cc: string): string => {
+  if (cc === 'en') cc = 'eu'
+
+  return cc
+    .toUpperCase()
+    .split('')
+    .map(ch => String.fromCodePoint(ch.charCodeAt(0) + 0x1F1A5))
+    .join('')
+}

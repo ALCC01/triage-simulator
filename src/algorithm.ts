@@ -1,4 +1,4 @@
-import { randomInt, randomBool, randomFloat, codeToEmoji } from './utils'
+import { randomInt, randomBool, randomFloat } from './utils'
 
 export enum Code {
   EXPECTANT = 4,
@@ -23,6 +23,21 @@ export interface Patient {
   obeys?: boolean
 }
 
+export enum Feedback {
+  CODE_NOT_ASSIGNED,
+  CODE_CORRECT,
+  CODE_INCORRECT,
+  BLEEDING_CONTROLLED,
+  BLEEDING_NOT_CONTROLLED,
+  BLEEDING_NOT_NEEDED,
+  AIRWAY_CLEARED,
+  AIRWAY_NOT_CLEARED,
+  AIRWAY_NOT_NEEDED,
+  PROGRESS_STOP_MOBILTY,
+  PROGRESS_STOP_RESPIRATORY_RATE,
+  PROGRESS_STOP_CAPILLARY_REFILL,
+}
+
 abstract class TriageAlgorithm {
   abstract newPatient (code: Code): Patient
   abstract controlBleeding (): Partial<Patient>
@@ -31,7 +46,7 @@ abstract class TriageAlgorithm {
   abstract checkCapillaryRefill (p: Patient): Partial<Patient>
   abstract checkMentalStatus (p: Patient): Partial<Patient>
   abstract checkWalking (p: Patient): Partial<Patient>
-  abstract getFeedback (p: Patient): string[]
+  abstract getFeedback (p: Patient): Feedback[]
 }
 
 class Start extends TriageAlgorithm {
@@ -82,30 +97,30 @@ class Start extends TriageAlgorithm {
     return { walking }
   }
 
-  getFeedback (p: Patient): string[] {
+  getFeedback (p: Patient): Feedback[] {
     const feedback = []
 
-    if (p.assignedCode === undefined) feedback.push('❓ You did not assign a code to this patient')
+    if (p.assignedCode === undefined) feedback.push(Feedback.CODE_NOT_ASSIGNED)
     else if (p.assignedCode !== p.code) {
-      feedback.push(`❌ The correct code was ${codeToEmoji(p.code)}, you assigned ${codeToEmoji(p.assignedCode)}`)
-    } else feedback.push(`🎉 The correct code was ${codeToEmoji(p.code)}!`)
+      feedback.push(Feedback.CODE_INCORRECT)
+    } else feedback.push(Feedback.CODE_CORRECT)
 
     if (p.bleeding) {
-      if (p.bleedingControlled === true) feedback.push('✅ Bleeding was controlled')
-      else feedback.push('❌ Bleeding wasn\'t controlled')
-    } else if (p.bleedingControlled === true) feedback.push('❌ Bleeding control wasn\'t needed')
+      if (p.bleedingControlled === true) feedback.push(Feedback.BLEEDING_CONTROLLED)
+      else feedback.push(Feedback.BLEEDING_NOT_CONTROLLED)
+    } else if (p.bleedingControlled === true) feedback.push(Feedback.BLEEDING_NOT_NEEDED)
 
     if (p.airwayObstruction || p.code === Code.EXPECTANT) {
-      if (p.airwayCleared === true) feedback.push('✅ Airway was cleared')
-      else if (p.respiratoryRate !== undefined) feedback.push('❌ Airway wasn\'t cleared') // Wait until respiratory rate is checked
-    } else if (p.airwayCleared === true) feedback.push('❌ Airway wasn\'t needed')
+      if (p.airwayCleared === true) feedback.push(Feedback.AIRWAY_CLEARED)
+      else if (p.respiratoryRate !== undefined) feedback.push(Feedback.AIRWAY_NOT_CLEARED) // Wait until respiratory rate is checked
+    } else if (p.airwayCleared === true) feedback.push(Feedback.AIRWAY_NOT_NEEDED)
 
     if (p.code === Code.MINOR && (p.respiratoryRate !== undefined || p.obeys !== undefined || p.capillaryRefill !== undefined)) {
-      feedback.push('❌ You didn\'t need to proceed beyond checking mobility')
+      feedback.push(Feedback.PROGRESS_STOP_MOBILTY)
     } else if (p.respiratoryRate !== undefined && (p.respiratoryRate === 0 || p.respiratoryRate > 30 || p.airwayObstruction) && (p.obeys !== undefined || p.capillaryRefill !== undefined)) {
-      feedback.push('❌ You didn\'t need to proceed beyond checking the respiratory rate')
+      feedback.push(Feedback.PROGRESS_STOP_RESPIRATORY_RATE)
     } else if (p.capillaryRefill !== undefined && p.capillaryRefill >= 2 && p.obeys !== undefined) {
-      feedback.push('❌ You didn\'t need to proceed beyond checking the capillary refill')
+      feedback.push(Feedback.PROGRESS_STOP_CAPILLARY_REFILL)
     }
 
     return feedback

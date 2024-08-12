@@ -2,6 +2,7 @@ import { type FunctionComponent } from 'preact'
 import Modal from '.'
 import { pct } from '../../utils'
 import { allPatients, selectBleedingNotControlled, selectOvertriagedPatients, selectTriagedPatients, selectUndertriagedPatients, useAppSelector } from '../../store'
+import { useTranslation } from 'react-i18next'
 
 export const STATS_MODAL_ID = 'stats'
 
@@ -20,18 +21,19 @@ const StatsModal: FunctionComponent = () => {
   const undertriaged = useAppSelector(selectUndertriagedPatients).length
   const overtriaged = useAppSelector(selectOvertriagedPatients).length
   const stillBleeding = useAppSelector(selectBleedingNotControlled).length
+  const { t } = useTranslation()
 
   return (
-    <Modal name={STATS_MODAL_ID} title='Statistics'>
+    <Modal name={STATS_MODAL_ID} title={t('Statistics')}>
       <ul className="flex justify-center gap-8 mb-2">
-        <Figure n={pct(triaged / patients)} label={`Triaged (${triaged})`} />
+        <Figure n={pct(triaged / patients)} label={t('Triaged ({{n}})', { n: triaged })} />
       </ul>
       <ul className="flex justify-center gap-8 mb-2">
-        <Figure n={pct(undertriaged / triaged)} label={`Undertriaged (${undertriaged})`} />
-        <Figure n={pct(overtriaged / triaged)} label={`Overtriaged (${overtriaged})`} />
+        <Figure n={pct(undertriaged / triaged)} label={t('Undertriaged  ({{n}})', { n: undertriaged })} />
+        <Figure n={pct(overtriaged / triaged)} label={t('Overtriaged ({{n}})', { n: overtriaged })} />
       </ul>
       <ul className="flex justify-center gap-8">
-        <Figure n={stillBleeding.toString()} label='Overseen hemorrages' />
+        <Figure n={stillBleeding.toString()} label={t('Overlooked bleeds')} />
       </ul>
     </Modal>
   )
