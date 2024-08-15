@@ -24,5 +24,5 @@ export const selectOvertriagedPatients = createSelector(
 
 export const selectBleedingNotControlled = createSelector(
   [selectTriagedPatients],
-  patients => patients.filter(({ bleeding }) => bleeding)
+  patients => patients.filter(({ bleeding, bleedingControlled }) => bleeding && bleedingControlled !== true)
 )
