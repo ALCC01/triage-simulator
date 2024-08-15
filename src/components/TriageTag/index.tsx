@@ -7,7 +7,10 @@ import TagCell from './TagCell'
 import TagTool from './TagTool'
 import TagCodeButton from './TagCodeButton'
 import Card from '../Card'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
+import { useCallback } from 'preact/hooks'
+import { useHotkey } from '../../hooks'
+import Kbd from '../Kbd'
 
 const TagCodeSelector: FunctionComponent<{ value?: number, onChange: (code: Code) => void }> = ({ value, onChange }) => {
   const { t } = useTranslation()
@@ -28,55 +31,70 @@ const TriageTag: FunctionComponent = () => {
   const patient = useAppSelector((state) => patientById(state, currentPatientId ?? 0))
   const dispatch = useAppDispatch()
 
+  const changeCode = useCallback((code: Code) => {
+    if (currentPatientId === undefined) return
+    dispatch(setCode([currentPatientId, code]))
+  }, [currentPatientId, dispatch])
+
+  useHotkey('1', () => { changeCode(3) }) // T1 = red
+  useHotkey('2', () => { changeCode(2) })
+  useHotkey('3', () => { changeCode(1) }) // T3 = green
+  useHotkey('4', () => { changeCode(4) }) // T4 = black
+
   if (currentPatientId === undefined) return <></>
   if (patient === undefined) return <></>
 
   return (
-    <Card className='h-min'>
-      <TagRow border>
-        <TagCell title={t('Triage tag')} span={9}>#{patient.id.toString().padStart(4, '0')}</TagCell>
-        <TagCell title={t('Age')} span={3}>{t('{{age}} yrs', { age: patient.age })}</TagCell>
-      </TagRow>
-      <TagRow>
-        <TagCell title={t('Hemorrhage')} span={6}>
-          {patient.bleedingControlled === true && <span className="text-green-600">{t('Controlled')}</span>}
-          {patient.bleeding && patient.bleedingControlled !== true && <span className="text-red-600">{t('Bleeding')}</span>}
-          {!patient.bleeding && patient.bleedingControlled !== true && t('Not bleeding')}
-        </TagCell>
-        <TagCell title={t('Mobility')} span={6}>
-          {patient.walking === undefined && '--'}
-          {patient.walking === true && t('Walking')}
-          {patient.walking === false && t('Not walking')}
-        </TagCell>
-      </TagRow>
-      <TagRow>
-        <TagCell title={t('Airway')} span={4}>
-          {patient.airwayCleared === undefined ? '--' : t('In place')}
-        </TagCell>
-        <TagCell title={t('Respiratory rate')} span={4}>
-          {patient.respiratoryRate === undefined ? '--' : patient.respiratoryRate}
-        </TagCell>
-        <TagCell title={t('Capillary refill')} span={4}>
-          {patient.capillaryRefill === undefined ? '--' : `${patient.capillaryRefill.toFixed(2)}s`}
-        </TagCell>
-      </TagRow>
-      <TagRow>
-        <TagCell title={t('Mental status')}>
-          {patient.obeys === undefined && '--'}
-          {patient.obeys === true && t('Obeys')}
-          {patient.obeys === false && t('Doesn\'t obey')}
-        </TagCell>
-      </TagRow>
-      <div className='flex flex-1 h-20 text-white'>
-        <TagTool title={t('Check mobility')} id='check-mobility' n='directions_walk' onClick={() => dispatch(checkWalking(patient.id))} />
-        <TagTool title={t('Control bleeding')} id='control-bleed' n='healing' onClick={() => dispatch(controlBleeding(patient.id))} />
-        <TagTool title={t('Respiratory rate')} id='check-rr' n='respiratory_rate' onClick={() => dispatch(checkRespiratoryRate(patient.id))} />
-        <TagTool title={t('Place airway')} id='place-airway' n='ent' onClick={() => dispatch(clearAirway(patient.id))} />
-        <TagTool title={t('Capillary refill')} id='check-capillary-refill' n='ecg' onClick={() => dispatch(checkCapillaryRefill(patient.id))} />
-        <TagTool title={t('Mental status')} id='check-mental-statumobilitys' n='cognition' onClick={() => dispatch(checkMentalStatus(patient.id))} />
-      </div>
-      <TagCodeSelector value={patient.assignedCode} onChange={(code: Code) => dispatch(setCode([patient.id, code]))} />
-    </Card >
+    <>
+      <Card className='h-min'>
+        <TagRow border>
+          <TagCell title={t('Triage tag')} span={9}>#{patient.id.toString().padStart(4, '0')}</TagCell>
+          <TagCell title={t('Age')} span={3}>{t('{{age}} yrs', { age: patient.age })}</TagCell>
+        </TagRow>
+        <TagRow>
+          <TagCell title={t('Hemorrhage')} span={6}>
+            {patient.bleedingControlled === true && <span className="text-green-600">{t('Controlled')}</span>}
+            {patient.bleeding && patient.bleedingControlled !== true && <span className="text-red-600">{t('Bleeding')}</span>}
+            {!patient.bleeding && patient.bleedingControlled !== true && t('Not bleeding')}
+          </TagCell>
+          <TagCell title={t('Mobility')} span={6}>
+            {patient.walking === undefined && '--'}
+            {patient.walking === true && t('Walking')}
+            {patient.walking === false && t('Not walking')}
+          </TagCell>
+        </TagRow>
+        <TagRow>
+          <TagCell title={t('Airway')} span={4}>
+            {patient.airwayCleared === undefined ? '--' : t('In place')}
+          </TagCell>
+          <TagCell title={t('Respiratory rate')} span={4}>
+            {patient.respiratoryRate === undefined ? '--' : patient.respiratoryRate}
+          </TagCell>
+          <TagCell title={t('Capillary refill')} span={4}>
+            {patient.capillaryRefill === undefined ? '--' : `${patient.capillaryRefill.toFixed(2)}s`}
+          </TagCell>
+        </TagRow>
+        <TagRow>
+          <TagCell title={t('Mental status')}>
+            {patient.obeys === undefined && '--'}
+            {patient.obeys === true && t('Obeys')}
+            {patient.obeys === false && t('Doesn\'t obey')}
+          </TagCell>
+        </TagRow>
+        <div className='flex flex-1 h-20 text-white'>
+          <TagTool title={t('Check mobility')} id='check-mobility' n='directions_walk' onClick={() => dispatch(checkWalking(patient.id))} />
+          <TagTool title={t('Control bleeding')} id='control-bleed' n='healing' onClick={() => dispatch(controlBleeding(patient.id))} />
+          <TagTool title={t('Respiratory rate')} id='check-rr' n='respiratory_rate' onClick={() => dispatch(checkRespiratoryRate(patient.id))} />
+          <TagTool title={t('Place airway')} id='place-airway' n='ent' onClick={() => dispatch(clearAirway(patient.id))} />
+          <TagTool title={t('Capillary refill')} id='check-capillary-refill' n='ecg' onClick={() => dispatch(checkCapillaryRefill(patient.id))} />
+          <TagTool title={t('Mental status')} id='check-mental-statumobilitys' n='cognition' onClick={() => dispatch(checkMentalStatus(patient.id))} />
+        </div>
+        <TagCodeSelector value={patient.assignedCode} onChange={(code: Code) => dispatch(setCode([patient.id, code]))} />
+      </Card >
+      <p className="text-center opacity-75 mt-4 mb-3 hidden lg:block">
+        <Trans t={t}>Use <Kbd>←</Kbd> and <Kbd>→</Kbd> to switch patients and keys <Kbd>1</Kbd> to <Kbd>4</Kbd> to assign codes</Trans>
+      </p>
+    </>
   )
 }
 

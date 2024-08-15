@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact'
 import Icon from './Icon'
-import { useGame, useModal } from '../hooks'
+import { useGame, useHotkey, useModal } from '../hooks'
 import { STATS_MODAL_ID } from './modals/StatsModal'
 import { INFO_MODAL_ID } from './modals/InfoModal'
 import { useState } from 'preact/hooks'
@@ -47,6 +47,8 @@ const LocaleDropdown: FunctionComponent<{ open: boolean, onChoice: () => void }>
     dispatch(setLocale(cc as any))
     onChoice()
   }
+
+  useHotkey('Escape', onChoice)
 
   const cls = cx(
     'absolute right-0 z-10 mt-1 w-48 origin-top-right bg-white shadow-md rounded',

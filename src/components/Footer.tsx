@@ -7,7 +7,7 @@ const Footer: FunctionComponent = () => {
   return (
     <footer className="text-center opacity-75 mt-4 mb-3">
       <span aria-label={t('Version')}>{APP_VERSION}</span> <span aria-label={t('Commit hash')}>{COMMIT_HASH}</span>
-  </footer >
+    </footer>
   )
 }
 

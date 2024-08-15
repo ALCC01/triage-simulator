@@ -52,3 +52,16 @@ export const localeToFlag = (cc: string): string => {
 
 export const pick = (keys: string[], object: Record<string, any>): Record<string, any> =>
   keys.reduce((acc, key) => ({ ...acc, [key]: object[key] }), {})
+
+/* export const useHotkey = (targetKey: string, f: () => void): void => {
+  useEffect(() => {
+    const downHandler = ({ key }: KeyboardEvent): void => {
+      if (key === targetKey) f()
+    }
+
+    window.addEventListener('keydown', downHandler)
+    return () => {
+      window.removeEventListener('keydown', downHandler)
+    }
+  }, [targetKey, f])
+} */

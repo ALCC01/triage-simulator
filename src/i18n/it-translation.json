@@ -51,5 +51,6 @@
   "Doesn't obey": "Non esegue",
   "Check mobility": "Controlla mobilità",
   "Control bleeding": "Controllo emorragia",
-  "Place airway": "Libera vie aeree"
+  "Place airway": "Libera vie aeree",
+  "Use <1>←</1> and <3>→</3> to switch patients and keys <5>1</5> to <7>4</7> to assign codes": "Usa <1>←</1> e <3>→</3> per cambiare paziente e i tasti da <5>1</5> a <7>4</7> per assegnare i codici"
 }

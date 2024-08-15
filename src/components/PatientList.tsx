@@ -3,10 +3,11 @@ import { codeToColor, cx } from '../utils'
 import Card, { CardHeader } from './Card'
 import { allPatients, useAppDispatch, useAppSelector } from '../store'
 import { setCurrentPatient, toggleFeedback } from '../store/ui'
-import { useGame } from '../hooks'
+import { useGame, useHotkey } from '../hooks'
 import Icon from './Icon'
 import { type Code } from '../algorithm'
 import { useTranslation } from 'react-i18next'
+import { useCallback } from 'preact/hooks'
 
 interface PatientDotProps {
   active?: boolean
@@ -60,6 +61,18 @@ const PatientList: FunctionComponent = () => {
   const patients = useAppSelector(allPatients)
   const revealCodes = useAppSelector((state) => state.ui.revealFeedback)
   const dispatch = useAppDispatch()
+
+  const changePatient = useCallback((by: number) => {
+    const index = patients.findIndex(({ id }) => id === currentPatientId)
+    const next = patients[index + by]
+    if (next !== undefined) dispatch(setCurrentPatient(next.id))
+  }, [currentPatientId, patients, dispatch])
+
+  const next = useCallback(() => { changePatient(1) }, [changePatient])
+  const previous = useCallback(() => { changePatient(-1) }, [changePatient])
+
+  useHotkey('ArrowLeft', previous)
+  useHotkey('ArrowRight', next)
 
   const onSelect = (id: number): void => {
     dispatch(setCurrentPatient(id))
